@@ -84,7 +84,10 @@ while obj.winner(obj.move_limit) == None:
         best_player = obj.player2
 
 print(new_board.board)
+print("WINNER COLOR:")
 print(winner)
+print("WINNER PLAYER NUM:")
+print(best_player.number)
 print("best first layer weights:")
 print(best_player.first_layer_weights)
 print("best first layer bias:")
