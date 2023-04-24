@@ -2,6 +2,38 @@ from copy import deepcopy
 import pygame
 from game import Game
 from myfile import *
+import time
+
+def alpha_beta(position, depth, alpha, beta, max_player, game):
+    if depth == 0 or position.winner(game.move_limit) != None:
+        return position.evaluate(game.board.player), position
+    
+    if max_player:
+        if game.turn == "red":
+            color_m = "white"
+        else:
+            color_m = "red"
+        best_move = None
+        for move in get_all_moves(position, color_m, game):
+            evaluation = alpha_beta(move, depth-1, alpha, beta, False, game)[0]
+            if evaluation > alpha:
+                alpha = evaluation
+                best_move = move
+            if alpha >= beta:
+                break
+        
+        return alpha, best_move
+    else:
+        best_move = None
+        for move in get_all_moves(position, game.turn, game):
+            evaluation = alpha_beta(move, depth-1, alpha, beta, True, game)[0]
+            if evaluation < beta:
+                beta = evaluation
+                best_move = move
+            if beta <= alpha:
+                break
+        
+        return beta, best_move
 
 def minimax(position, depth, max_player, game):
     if depth == 0 or position.winner(game.move_limit) != None:
@@ -72,8 +104,10 @@ obj = Game(player1, player2)
 # # obj.board.board_to_vec()
 # # print(obj.board.vec)
 # print(obj.move_limit)
+start_time = time.time()
 while obj.winner(obj.move_limit) == None:
-    value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
+    value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
+    # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
     print(obj.turn)
     # print(new_board.board)
     obj.ai_move(new_board)
@@ -82,6 +116,9 @@ while obj.winner(obj.move_limit) == None:
         best_player = obj.player1
     else:
         best_player = obj.player2
+
+end_time = time.time()
+print("Duration: ", end_time - start_time)
 
 # print(new_board.board)
 for i in new_board.board:
