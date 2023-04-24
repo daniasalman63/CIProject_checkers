@@ -1,5 +1,8 @@
 from myfile import *
 import random
+from game import Game
+from algorithm import *
+random.seed(0)
 
 def parentSelection(chromosomes, type):
     if type == random:
@@ -11,7 +14,50 @@ def parentSelection(chromosomes, type):
         if parent1 == parent2:
             print("Parents are the same??")
 
-        return parent1, parent2
+    elif type == truncation:
+        sorted_population = sorted(chromosomes, key=lambda chromosome: chromosome.score, reverse=True)
+        parent1 = sorted_population[-1]
+        parent2 = sorted_population[-2]
+
+    elif type == fps:
+        total_fitness = sum(chromosome.score for chromosome in chromosomes)
+
+        # generate two random numbers between 0 and the total fitness
+        spin_1 = random.uniform(0, total_fitness)
+        spin_2 = random.uniform(0, total_fitness)
+
+        # select two chromosomes proportional to their fitness
+        partial_sum = 0
+        parent1 = None
+        parent2 = None
+        for chromosome in chromosomes:
+            partial_sum += chromosome.score
+            if partial_sum >= spin_1 and parent1 is None:
+                parent1 = chromosome
+            if partial_sum >= spin_2 and parent2 is None:
+                parent2 = chromosome
+            if parent1 is not None and parent2 is not None:
+                break
+
+    elif type == binary_tournament:
+        parent_1 = random.choice(chromosomes)
+        parent_2 = random.choice(chromosomes)
+
+        # Choose the fittest chromosome as the first parent
+        if parent_1.score > parent_2.score:
+            parent1 = parent_1
+        else:
+            parent1 = parent_2
+
+        # repeats for second parent
+        parent_1 = random.choice(chromosomes)
+        parent_2 = random.choice(chromosomes)
+        if parent_1.score > parent_2.score:
+            parent2 = parent_1
+        else:
+            parent2 = parent_2
+
+    return parent1, parent2
     
 def crossover(parent1, parent2):
 
@@ -188,7 +234,7 @@ def mutation(offspring1, offspring2, mutationRate):
 
     mutatedOffspring1.append(o1first_layer_weights)
     mutatedOffspring1.append(o1second_layer_weights)
-    mutatedOffspring1.append(o1second_layer_weights)
+    mutatedOffspring1.append(o1third_layer_weights)
 
     mutatedOffspring2 = []
     mutatedOffspring2.append(o2first_layer_bias)
@@ -201,8 +247,34 @@ def mutation(offspring1, offspring2, mutationRate):
 
     return mutatedOffspring1, mutatedOffspring2
 
-def findFitness(chromosomes,  offspring1AfterMutation, offspring2AfterMutation):
-    pass
+def findFitness(population):
+    
+    for i in range(len(population) - 1):
+
+        player1 = population[i]
+
+        challengers = population[:i] +  population[i+1:]
+
+        randomPlayers = np.random.choice(challengers, size=5, replace=False)
+
+        for player2 in randomPlayers:
+            obj = Game(player1, player2)
+            while obj.winner(obj.move_limit) == None:
+                value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
+                #print(obj.turn)
+                # print(new_board.board)
+                obj.ai_move(new_board)
+                winner = obj.winner(obj.move_limit)
+                if winner == "red":
+                    best_player = obj.player1
+                else:
+                    best_player = obj.player2
+
+            print(best_player)
+
+        
+
+
 
 def NueroEvolution(population, generations):
 
@@ -212,22 +284,23 @@ def NueroEvolution(population, generations):
     for i in range(population):
         chromosomes.append(evolutionary_player(i))
 
-    print(chromosomes)
+    #print(chromosomes)
     count = 15
     
     for n in range(generations):
 
         parent1, parent2 = parentSelection(chromosomes, random)
 
-        offspring1, offspring2 = crossover(parent1, parent2)
+        offspring1, offspring2 = crossover(parent1, parent2)  
 
         offspring1AfterMutation, offspring2AfterMutation = mutation(offspring1, offspring2, mutationRate=0.5)
 
         parent1player, parent2player = createNeuralNetwork(offspring1AfterMutation, offspring2AfterMutation, count)
+       
 
         newPopulation = chromosomes + [parent1player, parent2player]
 
-        print(newPopulation)
+        #print(newPopulation)
 
         findFitness(newPopulation)
 
