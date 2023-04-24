@@ -107,28 +107,21 @@ obj = Game(player1, player2)
 start_time = time.time()
 counter = 0
 while counter < 40:
-    if obj.turn == "red":
-        opponent = "white"
-    else:
-        opponent = "red"
-    old_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
+    old_pieces = obj.board.red_left + obj.board.white_left
+    # old_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
     value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
     # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
     print(obj.turn)
     # print(new_board.board)
     obj.ai_move(new_board)
-    if obj.turn == "red":
-        opponent = "white"
-    else:
-        opponent = "red"
-    new_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
+    new_pieces = obj.board.red_left + obj.board.white_left
     difference = old_pieces - new_pieces
     if difference > 0:
         counter = 0
     else:
         counter += 1
     # print(counter)
-    # print("DIFF: ", old_pieces - new_pieces)
+    print("DIFF: ", old_pieces - new_pieces)
     winner = obj.winner()
 
     if winner == "red":
