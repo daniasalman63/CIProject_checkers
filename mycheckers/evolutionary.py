@@ -5,7 +5,7 @@ from algorithm import *
 random.seed(0)
 
 def parentSelection(chromosomes, type):
-    if type == random:
+    if type == "random":
         index = np.random.choice(chromosomes, 2, replace=False) 
         
         parent1 = index[0]
@@ -14,50 +14,7 @@ def parentSelection(chromosomes, type):
         if parent1 == parent2:
             print("Parents are the same??")
 
-    elif type == truncation:
-        sorted_population = sorted(chromosomes, key=lambda chromosome: chromosome.score, reverse=True)
-        parent1 = sorted_population[-1]
-        parent2 = sorted_population[-2]
-
-    elif type == fps:
-        total_fitness = sum(chromosome.score for chromosome in chromosomes)
-
-        # generate two random numbers between 0 and the total fitness
-        spin_1 = random.uniform(0, total_fitness)
-        spin_2 = random.uniform(0, total_fitness)
-
-        # select two chromosomes proportional to their fitness
-        partial_sum = 0
-        parent1 = None
-        parent2 = None
-        for chromosome in chromosomes:
-            partial_sum += chromosome.score
-            if partial_sum >= spin_1 and parent1 is None:
-                parent1 = chromosome
-            if partial_sum >= spin_2 and parent2 is None:
-                parent2 = chromosome
-            if parent1 is not None and parent2 is not None:
-                break
-
-    elif type == binary_tournament:
-        parent_1 = random.choice(chromosomes)
-        parent_2 = random.choice(chromosomes)
-
-        # Choose the fittest chromosome as the first parent
-        if parent_1.score > parent_2.score:
-            parent1 = parent_1
-        else:
-            parent1 = parent_2
-
-        # repeats for second parent
-        parent_1 = random.choice(chromosomes)
-        parent_2 = random.choice(chromosomes)
-        if parent_1.score > parent_2.score:
-            parent2 = parent_1
-        else:
-            parent2 = parent_2
-
-    return parent1, parent2
+        return parent1, parent2
     
 def crossover(parent1, parent2):
 
@@ -247,7 +204,7 @@ def mutation(offspring1, offspring2, mutationRate):
 
     return mutatedOffspring1, mutatedOffspring2
 
-def findFitness(population):
+def calculateFitness(population):
     
     for i in range(len(population) - 1):
 
@@ -255,22 +212,69 @@ def findFitness(population):
 
         challengers = population[:i] +  population[i+1:]
 
-        randomPlayers = np.random.choice(challengers, size=5, replace=False)
+        randomPlayers = np.random.choice(challengers, size=3, replace=False)
 
         for player2 in randomPlayers:
             obj = Game(player1, player2)
-            while obj.winner(obj.move_limit) == None:
-                value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
+            counter = 0
+            while counter < 40:
+                # if obj.turn == "red":
+                #     opponent = "white"
+                # else:
+                #     opponent = "red"
+                old_pieces = obj.board.red_left + obj.board.white_left
+                value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
+                # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
                 #print(obj.turn)
                 # print(new_board.board)
                 obj.ai_move(new_board)
-                winner = obj.winner(obj.move_limit)
+                # if obj.turn == "red":
+                #     opponent = "white"
+                # else:
+                #     opponent = "red"
+                new_pieces = obj.board.red_left + obj.board.white_left
+                difference = old_pieces - new_pieces
+                if difference > 0:
+                    counter = 0
+                else:
+                    counter += 1
+                # print(counter)
+                # print("DIFF: ", old_pieces - new_pieces)
+                winner = obj.winner()
+
                 if winner == "red":
                     best_player = obj.player1
                 else:
                     best_player = obj.player2
 
-            print(best_player)
+            if winner=="draw":
+                player1.score +=1
+                player2.score +=1
+            else:
+                best_player.score +=2
+
+            print("game complete")
+            
+
+
+
+def survivorSelection(newPopulation, type):
+
+    finalPopulation = []
+
+    if type == "truncation":
+
+        tup = []
+        for i in newPopulation:
+            tup.append((i.score, i))
+        
+        sortedlist = sorted(tup, key=lambda x: x[0], reverse=True)
+
+        for pop in sortedlist:
+            finalPopulation.append(pop[1])
+
+        return finalPopulation[:10]
+            
 
         
 
@@ -284,29 +288,66 @@ def NueroEvolution(population, generations):
     for i in range(population):
         chromosomes.append(evolutionary_player(i))
 
+    calculateFitness(chromosomes)
+
+    for i in chromosomes:
+        print(i.score)
+
     #print(chromosomes)
-    count = 15
+    count = 10
     
     for n in range(generations):
+        print("Generation: ", n)
 
-        parent1, parent2 = parentSelection(chromosomes, random)
+        parent1, parent2 = parentSelection(chromosomes, "random")
 
         offspring1, offspring2 = crossover(parent1, parent2)  
+        print("Crossover complete")
 
         offspring1AfterMutation, offspring2AfterMutation = mutation(offspring1, offspring2, mutationRate=0.5)
 
         parent1player, parent2player = createNeuralNetwork(offspring1AfterMutation, offspring2AfterMutation, count)
-       
+        print("Mutation complete")
 
         newPopulation = chromosomes + [parent1player, parent2player]
+        
 
-        #print(newPopulation)
+        calculateFitness(newPopulation)
+        print("Fitness Calculation complete")
 
-        findFitness(newPopulation)
+        chromosomes = survivorSelection(newPopulation, "truncation")
+        
+        print("Generation Scores")
+        for i in chromosomes:
+            print(i.score)
 
         count += 2
+    
+    print("Final Scores")
+    for i in chromosomes:
+        print(i.score)
 
 
 
 
-NueroEvolution(15, 1)
+NueroEvolution(10, 5)
+
+'''
+while obj.winner(obj.move_limit) == None:
+                value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
+                #print(obj.turn)
+                # print(new_board.board)
+                obj.ai_move(new_board)
+                winner = obj.winner(obj.move_limit)
+                if winner == "red":
+                    best_player = obj.player1
+                else:
+                    best_player = obj.player2
+
+            if winner=="draw":
+                player1.score +=1
+                player2.score +=1
+            else:
+                best_player.score +=2
+
+            print(winner)'''
