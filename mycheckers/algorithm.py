@@ -83,7 +83,13 @@ while obj.winner(obj.move_limit) == None:
     else:
         best_player = obj.player2
 
-print(new_board.board)
+# print(new_board.board)
+for i in new_board.board:
+    print(i)
+for i in new_board.board:
+    for piece in i:
+        if piece !=0:
+            print("PIECE COLOR: ", piece.color, " IS KING?: ", piece.king)
 print("WINNER COLOR:")
 print(winner)
 print("WINNER PLAYER NUM:")

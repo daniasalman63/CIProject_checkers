@@ -10,7 +10,6 @@ class Game:
         self.player1 = player1
         self.player2 = player2
         self.board = Board(player1)
-        self.board = Board(player2)
     
     # def update(self):
     #     # self.board.draw(self.win)
@@ -79,8 +78,12 @@ class Game:
         print(self.board.board)
     
     def ai_move(self, board):
-        self.board = board
-        self.change_turn()
+        if board == None:
+            # print("No valid moves")
+            self.change_turn()
+        else:
+            self.board = board
+            self.change_turn()
 
 
 # player1 = evolutionary_player(1)

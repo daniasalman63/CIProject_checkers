@@ -1,7 +1,5 @@
 from myfile import *
 import random
-from game import Game
-from algorithm import *
 
 def parentSelection(chromosomes, type):
     if type == random:
@@ -203,34 +201,8 @@ def mutation(offspring1, offspring2, mutationRate):
 
     return mutatedOffspring1, mutatedOffspring2
 
-def findFitness(population):
-    
-    for i in range(len(population) - 1):
-
-        player1 = population[i]
-
-        challengers = population[:i] +  population[i+1:]
-
-        randomPlayers = np.random.choice(challengers, size=5, replace=False)
-
-        for player2 in randomPlayers:
-            obj = Game(player1, player2)
-            while obj.winner(obj.move_limit) == None:
-                value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
-                #print(obj.turn)
-                # print(new_board.board)
-                obj.ai_move(new_board)
-                winner = obj.winner(obj.move_limit)
-                if winner == "red":
-                    best_player = obj.player1
-                else:
-                    best_player = obj.player2
-
-            print(best_player)
-
-        
-
-
+def findFitness(chromosomes,  offspring1AfterMutation, offspring2AfterMutation):
+    pass
 
 def NueroEvolution(population, generations):
 
@@ -240,7 +212,7 @@ def NueroEvolution(population, generations):
     for i in range(population):
         chromosomes.append(evolutionary_player(i))
 
-    #print(chromosomes)
+    print(chromosomes)
     count = 15
     
     for n in range(generations):
@@ -255,7 +227,7 @@ def NueroEvolution(population, generations):
 
         newPopulation = chromosomes + [parent1player, parent2player]
 
-        #print(newPopulation)
+        print(newPopulation)
 
         findFitness(newPopulation)
 
