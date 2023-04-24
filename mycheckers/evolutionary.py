@@ -103,7 +103,7 @@ def crossover(parent1, parent2):
 
     offspring1.append(o1first_layer_weights)
     offspring1.append(o1second_layer_weights)
-    offspring1.append(o1second_layer_weights)
+    offspring1.append(o1third_layer_weights)
 
     offspring2 = []
     offspring2.append(o2first_layer_bias)
@@ -119,7 +119,7 @@ def crossover(parent1, parent2):
 def mutation(offspring1, offspring2, mutationRate):
 
     o1first_layer_bias, o1second_layer_bias, o1third_layer_bias, o1first_layer_weights, o1second_layer_weights, o1third_layer_weights = offspring1
-    o2first_layer_bias, o2second_layer_bias, o2third_layer_bias, o2first_layer_weights, o2second_layer_weights, o2third_layer_weights = offspring1
+    o2first_layer_bias, o2second_layer_bias, o2third_layer_bias, o2first_layer_weights, o2second_layer_weights, o2third_layer_weights = offspring2
     
     if random.uniform(0, 1) < mutationRate:
         rand_nums = np.random.randint(0, len(o1first_layer_bias[0]) - 1, size=2)
@@ -201,20 +201,39 @@ def mutation(offspring1, offspring2, mutationRate):
 
     return mutatedOffspring1, mutatedOffspring2
 
+def findFitness(chromosomes,  offspring1AfterMutation, offspring2AfterMutation):
+    pass
 
-def NueroEvolution(population):
+def NueroEvolution(population, generations):
 
     chromosomes = []
 
+    #Initialise random population
     for i in range(population):
         chromosomes.append(evolutionary_player(i))
 
-    parent1, parent2 = parentSelection(chromosomes, random)
+    print(chromosomes)
+    count = 15
+    
+    for n in range(generations):
 
-    offspring1, offspring2 = crossover(parent1, parent2)
+        parent1, parent2 = parentSelection(chromosomes, random)
 
-    offspring1AfterMutation, offspring2AfterMutation = mutation(offspring1, offspring2, mutationRate=0.5)
+        offspring1, offspring2 = crossover(parent1, parent2)
+
+        offspring1AfterMutation, offspring2AfterMutation = mutation(offspring1, offspring2, mutationRate=0.5)
+
+        parent1player, parent2player = createNeuralNetwork(offspring1AfterMutation, offspring2AfterMutation, count)
+
+        newPopulation = chromosomes + [parent1player, parent2player]
+
+        print(newPopulation)
+
+        findFitness(newPopulation)
+
+        count += 2
 
 
 
-NueroEvolution(2)
+
+NueroEvolution(15, 1)

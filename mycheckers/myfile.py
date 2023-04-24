@@ -22,6 +22,14 @@ class Evol_Player(object):
         self.third_layer_weights = third_layer_weights
         self.third_layer_bias = third_layer_bias
 
+        self.wins = 0
+        self.loss = 0
+        self.draw = 0
+
+    def getWeights(self):
+        return self.first_layer_weights, self.first_layer_bias,  self.second_layer_weights, + \
+               self.second_layer_bias,  self.third_layer_weights,  self.third_layer_bias
+
 # Used in the NN
 def sigmoid(x):
     """
@@ -50,6 +58,16 @@ def predict_nn(board, player):
     output = np.sum(third_layer_output)
     
     return output
+
+def createNeuralNetwork(offspring1AfterMutation, offspring2AfterMutation, count):
+
+    first_layer_bias1, second_layer_bias1, third_layer_bias1, first_layer_weights1, second_layer_weights1, third_layer_weights1 = offspring1AfterMutation
+    first_layer_bias2, second_layer_bias2, third_layer_bias2, first_layer_weights2, second_layer_weights2, third_layer_weights2 = offspring2AfterMutation
+
+    player1 = Evol_Player(count + 1, first_layer_weights1, first_layer_bias1, second_layer_weights1, second_layer_bias1, third_layer_weights1, third_layer_bias1)
+    player2 = Evol_Player(count + 2, first_layer_weights2, first_layer_bias2, second_layer_weights2, second_layer_bias2, third_layer_weights2, third_layer_bias2)
+
+    return player1, player2
 
 
 # player1 = evolutionary_player(1)
