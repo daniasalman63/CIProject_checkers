@@ -7,9 +7,11 @@ class Board:
     def __init__(self, player):
         self.board = []
         self.red_left = self.white_left = 12
+        self.old_red = self.old_white = 12
         self.red_kings = self.white_kings = 0
         self.create_board()
         self.player = player
+        self.capture = False
     
     # def draw_squares(self, win):
     #     win.fill(BLACK)
@@ -83,37 +85,29 @@ class Board:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
                 if piece.color == "red":
+                    # self.old_red = self.red_left
                     self.red_left -= 1
+                    # self.capture = True
+                    # print("old_red: ", self.old_red, " new_red: ", self.red_left)
                 else:
+                    # self.old_white = self.red_left
                     self.white_left -= 1
+                    # self.capture = True
+                    # print("old_white: ", self.old_white, " new_white: ", self.white_left)
     
-    def winner(self, move_limit):
-        # if move_limit >= 400:
-        #     return "draw"
-        # if self.red_left <= 0:
-        #     return "white"
-        # elif self.white_left <= 0:
-        #     return "red"
-        
-        # return None 
-        if move_limit >= 200:
-            white_pieces = len(self.get_all_pieces("white"))
-            red_pieces = len(self.get_all_pieces("red"))
-            if white_pieces > red_pieces:
-                return "white"
-            elif red_pieces > white_pieces:
-                return "red"
-            else:
-                return "draw"
-
+    def winner(self): 
         white_pieces = len(self.get_all_pieces("white"))
         red_pieces = len(self.get_all_pieces("red"))
         if white_pieces == 0:
             return "red"
         elif red_pieces == 0:
             return "white"
-
-        return None
+        elif white_pieces > red_pieces:
+            return "white"
+        elif red_pieces > white_pieces:
+            return "red"
+        else:
+            return "draw"
     
     def get_valid_moves(self, piece):
         moves = {}

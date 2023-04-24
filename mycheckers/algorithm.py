@@ -5,7 +5,7 @@ from myfile import *
 import time
 
 def alpha_beta(position, depth, alpha, beta, max_player, game):
-    if depth == 0 or position.winner(game.move_limit) != None:
+    if depth == 0:
         return position.evaluate(game.board.player), position
     
     if max_player:
@@ -36,7 +36,7 @@ def alpha_beta(position, depth, alpha, beta, max_player, game):
         return beta, best_move
 
 def minimax(position, depth, max_player, game):
-    if depth == 0 or position.winner(game.move_limit) != None:
+    if depth == 0:
         return position.evaluate(game.board.player), position
     
     if max_player:
@@ -105,13 +105,32 @@ obj = Game(player1, player2)
 # # print(obj.board.vec)
 # print(obj.move_limit)
 start_time = time.time()
-while obj.winner(obj.move_limit) == None:
+counter = 0
+while counter < 40:
+    if obj.turn == "red":
+        opponent = "white"
+    else:
+        opponent = "red"
+    old_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
     value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
     # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
     print(obj.turn)
     # print(new_board.board)
     obj.ai_move(new_board)
-    winner = obj.winner(obj.move_limit)
+    if obj.turn == "red":
+        opponent = "white"
+    else:
+        opponent = "red"
+    new_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
+    difference = old_pieces - new_pieces
+    if difference > 0:
+        counter = 0
+    else:
+        counter += 1
+    # print(counter)
+    # print("DIFF: ", old_pieces - new_pieces)
+    winner = obj.winner()
+
     if winner == "red":
         best_player = obj.player1
     else:

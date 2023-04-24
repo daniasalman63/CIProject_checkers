@@ -20,10 +20,10 @@ class Game:
         self.selected = None
         self.turn = "white"
         self.valid_moves = {}
-        self.move_limit = 0
 
-    def winner(self, move_limit):
-        return self.board.winner(move_limit)
+
+    def winner(self):
+        return self.board.winner()
 
     def reset(self):
         self._init()
@@ -63,7 +63,6 @@ class Game:
 
     def change_turn(self):
         self.valid_moves = {}
-        self.move_limit += 1
         if self.turn == "red":
             self.turn = "white"
             self.board.player = self.player2
