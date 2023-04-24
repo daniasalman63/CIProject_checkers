@@ -54,6 +54,8 @@ def get_all_moves(board, color, game):
     
     return moves
 
+
+
 player1 = evolutionary_player(1)
 player2 = evolutionary_player(2)
 obj = Game(player1, player2)
@@ -76,5 +78,22 @@ while obj.winner(obj.move_limit) == None:
     # print(new_board.board)
     obj.ai_move(new_board)
     winner = obj.winner(obj.move_limit)
+    if winner == "red":
+        best_player = obj.player1
+    else:
+        best_player = obj.player2
+
 print(new_board.board)
 print(winner)
+print("best first layer weights:")
+print(best_player.first_layer_weights)
+print("best first layer bias:")
+print(best_player.first_layer_bias)
+print("best second layer weights:")
+print(best_player.second_layer_weights)
+print("best second layer bias:")
+print(best_player.second_layer_bias)
+print("best third layer weights:")
+print(best_player.third_layer_weights)
+print("best third layer bias:")
+print(best_player.third_layer_bias)
