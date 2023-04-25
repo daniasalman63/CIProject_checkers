@@ -6,29 +6,21 @@ from board import Board
 
 class Game:
     def __init__(self, player1, player2):
-        self._init()
-        self.player1 = player1
-        self.player2 = player2
-        self.board = Board(player1)
-    
-    # def update(self):
-    #     # self.board.draw(self.win)
-    #     self.draw_valid_moves(self.valid_moves)
-    #     # pygame.display.update()
-
-    def _init(self):
         self.selected = None
         self.turn = "white"
         self.valid_moves = {}
-
+        self.player1 = player1
+        self.player2 = player2
+        self.board = Board(player1)
 
     def winner(self):
+        """whatever the current board situation is, decide winner accoridng to that
+        using winner method from board class"""
         return self.board.winner()
 
-    def reset(self):
-        self._init()
-
     def select(self, row, col):
+        """This is reponsible for selecting the piece u want to move
+        and then selecting the position you want to move the piece to"""
         if self.selected:
             result = self._move(row, col)
             if not result:
@@ -44,24 +36,21 @@ class Game:
         return False
 
     def _move(self, row, col):
+        """This is a private method called when self.selected is True, i.e. when you have 
+        selected a piece and a position to move to"""
         piece = self.board.get_piece(row, col)
         if self.selected and piece == 0 and (row, col) in self.valid_moves:
             self.board.move(self.selected, row, col)
             skipped = self.valid_moves[(row, col)]
             if skipped:
                 self.board.remove(skipped)
-            # self.change_turn()
         else:
             return False
 
         return True
 
-    # def draw_valid_moves(self, moves):
-    #     for move in moves:
-    #         row, col = move
-    #         pygame.draw.circle(self.win, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
-
     def change_turn(self):
+        "changes turn so that no player can have two consecutive turns"
         self.valid_moves = {}
         if self.turn == "red":
             self.turn = "white"
@@ -71,12 +60,11 @@ class Game:
             self.board.player = self.player1
 
     def get_board(self):
+        """returns current board of the game"""
         return self.board
     
-    def print_board(self):
-        print(self.board.board)
-    
     def ai_move(self, board):
+        """makes a move using alpha-beta pruning"""
         if board == None:
             # print("No valid moves")
             self.change_turn()

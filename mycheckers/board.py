@@ -6,19 +6,15 @@ from pieces import Piece
 class Board:
     def __init__(self, player):
         self.board = []
-        self.red_left = self.white_left = 12
-        self.old_red = self.old_white = 12
+        self.red_left = 12
+        self.white_left = 12
         self.red_kings = self.white_kings = 0
         self.create_board()
         self.player = player
-        self.capture = False
     
-    # def draw_squares(self, win):
-    #     win.fill(BLACK)
-    #     for row in range(ROWS):
-    #         for col in range(row % 2, COLS, 2):
-    #             pygame.draw.rect(win, RED, (row*SQUARE_SIZE, col *SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
     def evaluate(self, player):
+        """This function evaluates the score which is an 
+        output from the neural network"""
         return predict_nn(self.board_to_vec(self.board), player)
     
     def get_all_pieces(self, color):
@@ -30,9 +26,13 @@ class Board:
         return pieces
 
     def move(self, piece, row, col):
+        """This function moves the piece from one position to another,
+        it doesn't deal with removing any pieces"""
+        #SWAPPING THE POSITIONS, THE POS WHERE THE PIECE WAS ACTUALLY AT WOULD BECOME 0 WHICH MEANS AN AMPTY BLOCK
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
 
+        #IF EITHER OF THE PIECE REACHES THE END OF THE BOARD WHEN A MOVE IS MADE, THE PIECE BECOMES KING
         if row == 7 or row == 0:
             piece.make_king()
             if piece.color == "white":
@@ -43,27 +43,36 @@ class Board:
         # print(self.vec)
 
     def get_piece(self, row, col):
+        """This will get the piece object on the given row and column"""
         return self.board[row][col]
 
     def create_board(self):
+        """This would create an initial board with all pieces placed at their respective positions"""
         for row in range(8):
             self.board.append([])
-            for col in range(8):
-                if col % 2 == ((row +  1) % 2):
-                    if row < 3:
+            for col in range (8):
+                if row< 3:
+                    if (row%2 == 0 and col%2 ==1) or (row%2 ==1 and col%2 == 0):
                         self.board[row].append(Piece(row, col, "white"))
-                    elif row > 4:
+                    else:
+                        self.board[row].append(0)
+                elif row >= 3 and row <5:
+                    self.board[row].append(0)
+                else:
+                    if (row%2 == 0 and col%2 ==1) or (row%2 ==1 and col%2 == 0):
                         self.board[row].append(Piece(row, col, "red"))
                     else:
                         self.board[row].append(0)
-                else:
-                    self.board[row].append(0)
         
     def board_to_vec(self, board):
+        """This will convert the nested board list to a numpy array of shape (1,32)
+        so that we can send the playable positions of the board to the neural 
+        network in order to evaluate the score of the current position to 
+        act as an heuristic of alpha-beta pruning"""
         vec = []
         for row in range(8):
-            for col in range(8):
-                if (col%2 == (row+1)%2):
+            for col in range (8):
+                if (row %2 == 0 and col%2 == 1) or (row%2 ==1 and col%2 == 0):
                     pos = board[row][col]
                     if pos == 0:
                         vec.append(0)
@@ -81,21 +90,21 @@ class Board:
         return vec
 
     def remove(self, pieces):
+        """This will take as input all the pieces a checker jumped over
+        then those pieces would be removed from board by replacing them 
+        with 0"""
         for piece in pieces:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
                 if piece.color == "red":
-                    # self.old_red = self.red_left
                     self.red_left -= 1
-                    # self.capture = True
-                    # print("old_red: ", self.old_red, " new_red: ", self.red_left)
                 else:
-                    # self.old_white = self.red_left
                     self.white_left -= 1
-                    # self.capture = True
-                    # print("old_white: ", self.old_white, " new_white: ", self.white_left)
     
     def winner(self): 
+        """The winner is decided when 40 moves are made without any capture
+        from either sides, the game ends then and whichever color has more pieces wins 
+        otherwise if both have equal pieces then its a draw"""
         white_pieces = len(self.get_all_pieces("white"))
         red_pieces = len(self.get_all_pieces("red"))
         if white_pieces == 0:
@@ -110,6 +119,7 @@ class Board:
             return "draw"
     
     def get_valid_moves(self, piece):
+        """This checks for all the valid moves a current piece has by traversing left and right diagonals"""
         moves = {}
         left = piece.col - 1
         right = piece.col + 1
@@ -121,10 +131,11 @@ class Board:
         if piece.color == "white" or piece.king:
             moves.update(self._traverse_left(row +1, min(row+3, 8), 1, piece.color, left))
             moves.update(self._traverse_right(row +1, min(row+3, 8), 1, piece.color, right))
-    
+        print (moves)
         return moves
 
     def _traverse_left(self, start, stop, step, color, left, skipped=[]):
+        """This traverses all the left diagonals"""
         moves = {}
         last = []
         for r in range(start, stop, step):
@@ -158,6 +169,7 @@ class Board:
         return moves
 
     def _traverse_right(self, start, stop, step, color, right, skipped=[]):
+        """This traverses all the right diagonals"""
         moves = {}
         last = []
         for r in range(start, stop, step):
