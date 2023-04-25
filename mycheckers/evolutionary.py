@@ -14,7 +14,55 @@ def parentSelection(chromosomes, type):
         if parent1 == parent2:
             print("Parents are the same??")
 
-        return parent1, parent2
+    elif type == "truncation":
+        sorted_population = sorted(chromosomes, key=lambda chromosome: chromosome.score, reverse=True)
+        parent1 = sorted_population[-1]
+        parent2 = sorted_population[-2]
+
+    elif type == "fps":
+        total_fitness = sum(chromosome.score for chromosome in chromosomes)
+        chromosome_probabilities = [chromosome.fitness/total_fitness for chromosome in chromosomes]
+        
+        parent1 = np.random.choice(chromosomes, p=chromosome_probabilities)
+        parent2 = np.random.choice(chromosomes, p=chromosome_probabilities)
+        # # generate two random numbers between 0 and the total fitness
+        # spin_1 = random.uniform(0, total_fitness)
+        # spin_2 = random.uniform(0, total_fitness)
+
+        # # select two chromosomes proportional to their fitness
+        # partial_sum = 0
+        # parent1 = None
+        # parent2 = None
+        # for chromosome in chromosomes:
+        #     partial_sum += chromosome.score
+        #     if partial_sum >= spin_1 and parent1 is None:
+        #         parent1 = chromosome
+        #     if partial_sum >= spin_2 and parent2 is None:
+        #         parent2 = chromosome
+        #     if parent1 is not None and parent2 is not None:
+        #         break 
+
+    elif type == "binary_tournament":
+        parent_1 = random.choice(chromosomes)
+        parent_2 = random.choice(chromosomes)
+
+        # Choose the fittest chromosome as the first parent
+        if parent_1.score > parent_2.score:
+            parent1 = parent_1
+        else:
+            parent1 = parent_2
+
+        # repeats for second parent
+        parent_1 = random.choice(chromosomes)
+        parent_2 = random.choice(chromosomes)
+        if parent_1.score > parent_2.score:
+            parent2 = parent_1
+        else:
+            parent2 = parent_2
+
+    return parent1, parent2
+
+         
     
 def crossover(parent1, parent2):
 
@@ -261,7 +309,7 @@ def calculateFitness(population):
 def survivorSelection(newPopulation, type):
 
     finalPopulation = []
-
+        
     if type == "truncation":
 
         tup = []
@@ -273,12 +321,29 @@ def survivorSelection(newPopulation, type):
         for pop in sortedlist:
             finalPopulation.append(pop[1])
 
-        return finalPopulation[:10]
-            
+        finalPopulation =  finalPopulation[:10]
+    
+    elif type == "fps":
+        total_fitness = sum(chromosome.score for chromosome in newPopulation)
+        chromosome_probabilities = [chromosome.fitness/total_fitness for chromosome in newPopulation]
+        for i in range(10):
+            finalPopulation.append(np.random.choice(newPopulation, p=chromosome_probabilities))
 
-        
 
+    elif type == "binary_tournament":
+         
+        for i in range(10):
+        # Choose two random parents from the population
+            parent1 = random.choice(newPopulation)
+            parent2 = random.choice(newPopulation)
 
+            # Choose the fittest chromosome as the first parent
+            if parent1.score > parent2.score:
+                finalPopulation.append(parent1)
+            else:
+                finalPopulation.append(parent2)
+    
+    return finalPopulation
 
 def NueroEvolution(population, generations):
 
