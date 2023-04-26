@@ -134,6 +134,10 @@ def get_all_moves(board, color, game):
 #     print(obj.turn)
 #     # print(new_board.board)
 #     obj.ai_move(new_board)
+        root = tk.Tk()
+        gui = CheckersBoard(root, new_board.board)
+        gui.update_board(new_board.board)
+        root.mainloop()
 #     new_pieces = obj.board.red_left + obj.board.white_left
 #     difference = old_pieces - new_pieces
 #     if difference > 0:
