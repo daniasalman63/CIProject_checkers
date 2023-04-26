@@ -21,7 +21,7 @@ def parentSelection(chromosomes, type):
 
     elif type == "fps":
         total_fitness = sum(chromosome.score for chromosome in chromosomes)
-        chromosome_probabilities = [chromosome.fitness/total_fitness for chromosome in chromosomes]
+        chromosome_probabilities = [chromosome.score/total_fitness for chromosome in chromosomes]
         
         parent1 = np.random.choice(chromosomes, p=chromosome_probabilities)
         parent2 = np.random.choice(chromosomes, p=chromosome_probabilities)
@@ -325,7 +325,7 @@ def survivorSelection(newPopulation, type):
     
     elif type == "fps":
         total_fitness = sum(chromosome.score for chromosome in newPopulation)
-        chromosome_probabilities = [chromosome.fitness/total_fitness for chromosome in newPopulation]
+        chromosome_probabilities = [chromosome.score/total_fitness for chromosome in newPopulation]
         for i in range(10):
             finalPopulation.append(np.random.choice(newPopulation, p=chromosome_probabilities))
 
