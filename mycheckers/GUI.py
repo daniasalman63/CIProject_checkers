@@ -13,7 +13,7 @@ class CheckersBoard:
             "dark": "#2C3E50",
             "light": "#EAEAEA"
         }
-
+        self.flag = False
         self.selected_piece = None
         self.canvas.bind("<Button-1>", self.on_square_clicked)
         self.array = array
@@ -50,23 +50,25 @@ class CheckersBoard:
 
     def on_square_clicked(self, event): #selects and tells location of piece
         
-        row = event.y // self.square_size
-        col = event.x // self.square_size
-        piece = self.array[row][col]
+        self.row = event.y // self.square_size
+        self.col = event.x // self.square_size
+        piece = self.array[self.row][self.col]
+        # return (row,col)
+        self.flag = True
+        print(f"you have selected the piece at ({self.row},{self.col})")
+        # if self.selected_piece == None:
+        #     if piece is not None:
+        #         self.selected_piece = piece
+        #         print(f"you have selected the piece at ({row},{col})")
 
-        if self.selected_piece == None:
-            if piece is not None:
-                self.selected_piece = piece
-                print(f"you have selected the piece at ({row},{col})")
-
-        else:
-            if piece in self._move(self.selected_piece):
-                print('it is valid move')
-                self.obj._move(row, col)
-                self.selected_piece = None
-            else:
-                print('not valid move')
-                self.selected_piece = None
+        # else:
+        #     if piece in self._move(self.selected_piece):
+        #         print('it is valid move')
+        #         self.obj._move(row, col)
+        #         self.selected_piece = None
+        #     else:
+        #         print('not valid move')
+        #         self.selected_piece = None
 
 
 
@@ -112,4 +114,3 @@ class CheckersBoard:
 # board = CheckersBoard(root, array)
 # board.update_board(array)
 # root.mainloop()
-
