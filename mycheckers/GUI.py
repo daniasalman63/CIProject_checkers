@@ -1,4 +1,7 @@
 import tkinter as tk
+from board import *
+from game import Game
+
 
 class CheckersBoard:
     def __init__(self, master, array):
@@ -10,9 +13,12 @@ class CheckersBoard:
             "dark": "#2C3E50",
             "light": "#EAEAEA"
         }
+
         self.selected_piece = None
         self.canvas.bind("<Button-1>", self.on_square_clicked)
         self.array = array
+        
+
         # draw the checkerboard
         for row in range(8):
             for col in range(8):
@@ -40,33 +46,70 @@ class CheckersBoard:
                             self.canvas.create_oval(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, fill='white', tags='piece')
                             self.canvas.create_arc(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, start=90, extent=180, style=tk.ARC, width=4, outline='yellow', tags='piece')
                             self.canvas.create_arc(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, start=270, extent=180, style=tk.ARC, width=4, outline='yellow', tags='piece')
-        
-    def on_square_clicked(self, event): #selects and tells location of piece
+  
 
+    def on_square_clicked(self, event): #selects and tells location of piece
+        
         row = event.y // self.square_size
         col = event.x // self.square_size
-        
         piece = self.array[row][col]
-        if piece:
-            self.selected_piece = (row, col)
-            print(f"Selected {piece} at ({row}, {col})")
+
+        if self.selected_piece == None:
+            if piece is not None:
+                self.selected_piece = piece
+                print(f"you have selected the piece at ({row},{col})")
+
         else:
-            print(f"No piece at ({row}, {col})")
+            if piece in self._move(self.selected_piece):
+                print('it is valid move')
+                self.obj._move(row, col)
+                self.selected_piece = None
+            else:
+                print('not valid move')
+                self.selected_piece = None
+
+
+
+        # piece = self.array[row][col]
+        # if piece:
+        #     self.selected_piece = (row, col)
+        #     print(f"Selected {piece} at ({row}, {col})")
+        # else:
+        #     print(f"No piece at ({row}, {col})")
+
+            
+            # if self.selected_piece:
+            #     old_row, old_col = self.selected_piece
+
+            #     if self.is_valid(old_row, old_col, row, col):
+            #         print(f"Valid move from ({old_row}, {old_col}) to ({row}, {col})")
+            #         # update board
+            #         self.array[row][col] = self.array[old_row][old_col]
+            #         self.array[old_row][old_col] = None
+            #         # clear selection
+            #         self.selected_piece = None
+            #         # redraw board
+            #         self.update_board(self.array)
+            #     else:
+            #         print(f"Invalid move from ({old_row}, {old_col}) to ({row}, {col})")
+            #         # clear selection
+            #         self.selected_piece = None
 
 
 
 
 # root = tk.Tk()
-# board = CheckersBoard(root)
-# board.update_board(array = [
+# array = [
 # ['white', 0, 'white', 0, 'white', 0, 'white', 0],
 # [0, 'white', 0, 'white', 0, 'white', 0, 'white'],
 # ['white', 0, 'white', 0, 'white', 0, 'white', 0],
 # [0, 0, 0, 0, 0, 0, 0, 0],
 # [0, 0, 0, 0, 0, 0, 0, 0],
 # [0, 'red', 0, 'red', 0, 'red', 0, 'red'],
-# ['red', 0, 'red', 0, 'red', 0, 'white', 0],
+# ['red', 0, 'red', 0, 'red', 0, 'red', 0],
 # [0, 'red', 0, 'red', 0, 'red', 0, 'red']
-# ])
+# ]
+# board = CheckersBoard(root, array)
+# board.update_board(array)
 # root.mainloop()
 
