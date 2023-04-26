@@ -20,27 +20,13 @@ def parentSelection(chromosomes, type):
         parent2 = sorted_population[-2]
 
     elif type == "fps":
+        
         total_fitness = sum(chromosome.score for chromosome in chromosomes)
         chromosome_probabilities = [chromosome.score/total_fitness for chromosome in chromosomes]
+        parent1 = random.choices(chromosomes, weights=chromosome_probabilities)
+        newPopulation.remove(parent1)
+        parent2 = random.choices(chromosomes, weigths=chromosome_probabilities)
         
-        parent1 = np.random.choice(chromosomes, p=chromosome_probabilities)
-        parent2 = np.random.choice(chromosomes, p=chromosome_probabilities)
-        # # generate two random numbers between 0 and the total fitness
-        # spin_1 = random.uniform(0, total_fitness)
-        # spin_2 = random.uniform(0, total_fitness)
-
-        # # select two chromosomes proportional to their fitness
-        # partial_sum = 0
-        # parent1 = None
-        # parent2 = None
-        # for chromosome in chromosomes:
-        #     partial_sum += chromosome.score
-        #     if partial_sum >= spin_1 and parent1 is None:
-        #         parent1 = chromosome
-        #     if partial_sum >= spin_2 and parent2 is None:
-        #         parent2 = chromosome
-        #     if parent1 is not None and parent2 is not None:
-        #         break 
 
     elif type == "binary_tournament":
         parent_1 = random.choice(chromosomes)
@@ -324,11 +310,12 @@ def survivorSelection(newPopulation, type):
         finalPopulation =  finalPopulation[:10]
     
     elif type == "fps":
-        total_fitness = sum(chromosome.score for chromosome in newPopulation)
-        chromosome_probabilities = [chromosome.score/total_fitness for chromosome in newPopulation]
         for i in range(10):
-            finalPopulation.append(np.random.choice(newPopulation, p=chromosome_probabilities))
-
+            total_fitness = sum(chromosome.score for chromosome in newPopulation)
+            chromosome_probabilities = [chromosome.score/total_fitness for chromosome in newPopulation]
+            choice = random.choices(newPopulation, weights=chromosome_probabilities)
+            newPopulation.remove(choice[0])
+            finalPopulation.append(random.choices(choice[0]))
 
     elif type == "binary_tournament":
          
