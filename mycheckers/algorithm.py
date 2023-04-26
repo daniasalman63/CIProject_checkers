@@ -3,6 +3,7 @@ import pygame
 from game import Game
 from myfile import *
 import time
+from GUI import *
 
 ## OPTIMIZED VERSION OF MINIMAX FOR BETTER EFFICIENCY
 def alpha_beta(position, depth, alpha, beta, max_player, game):
@@ -107,75 +108,81 @@ def get_all_moves(board, color, game):
     return moves
 
 
-##MAKING AI PLAYERS PLAY A GAME HERE
-# player1 = evolutionary_player(1)
-# player2 = evolutionary_player(2)
-# obj = Game(player1, player2)
-# # piece = obj.board.get_piece(5, 0)
-# # print(piece)
-# # obj.select(5, 0)
-# # print(obj.valid_moves)
-# # obj.select(4, 1)
-# # # obj.board.board_to_vec()
-# # print(obj.board.board)
-# # # print(obj.board.vec)
-# # print(obj.select(2, 1))
-# # obj.select(3, 2)
-# # # obj.board.board_to_vec()
-# # # print(obj.board.vec)
-# # print(obj.move_limit)
-# start_time = time.time()
-# counter = 0
-# while counter < 40:
-#     old_pieces = obj.board.red_left + obj.board.white_left
-#     # old_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
-#     value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
-#     # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
-#     print(obj.turn)
-#     # print(new_board.board)
-#     obj.ai_move(new_board)
-        root = tk.Tk()
-        gui = CheckersBoard(root, new_board.board)
-        gui.update_board(new_board.board)
-        root.mainloop()
-#     new_pieces = obj.board.red_left + obj.board.white_left
-#     difference = old_pieces - new_pieces
-#     if difference > 0:
-#         counter = 0
-#     else:
-#         counter += 1
-#     # print(counter)
-#     print("DIFF: ", old_pieces - new_pieces)
-#     winner = obj.winner()
+#MAKING AI PLAYERS PLAY A GAME HERE
+player1 = evolutionary_player(1)
+player2 = evolutionary_player(2)
+obj = Game(player1, player2)
+# piece = obj.board.get_piece(5, 0)
+# print(piece)
+# obj.select(5, 0)
+# print(obj.valid_moves)
+# obj.select(4, 1)
+# # obj.board.board_to_vec()
+# print(obj.board.board)
+# # print(obj.board.vec)
+# print(obj.select(2, 1))
+# obj.select(3, 2)
+# # obj.board.board_to_vec()
+# # print(obj.board.vec)
+# print(obj.move_limit)
+start_time = time.time()
+counter = 0
+while counter < 40:
+    old_pieces = obj.board.red_left + obj.board.white_left
+    # old_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
+    if obj.turn == "white":
+        value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
+        obj.ai_move(new_board)
+        print(new_board.board)
+    # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
+    # else:
 
-#     if winner == "red":
-#         best_player = obj.player1
-#     else:
-#         best_player = obj.player2
+    print(obj.turn)
+    # print(new_board.board)
+    # obj.ai_move(new_board)
+    root = tk.Tk()
+    gui = CheckersBoard(root, new_board.board)
 
-# end_time = time.time()
-# print("Duration: ", end_time - start_time)
+    gui.update_board(new_board.board)
+    root.mainloop()
+    new_pieces = obj.board.red_left + obj.board.white_left
+    difference = old_pieces - new_pieces
+    if difference > 0:
+        counter = 0
+    else:
+        counter += 1
+    # print(counter)
+    print("DIFF: ", old_pieces - new_pieces)
+    winner = obj.winner()
 
-# # print(new_board.board)
-# for i in new_board.board:
-#     print(i)
-# for i in new_board.board:
-#     for piece in i:
-#         if piece !=0:
-#             print("PIECE COLOR: ", piece.color, " IS KING?: ", piece.king)
-# print("WINNER COLOR:")
-# print(winner)
-# print("WINNER PLAYER NUM:")
-# print(best_player.number)
-# print("best first layer weights:")
-# print(best_player.first_layer_weights)
-# print("best first layer bias:")
-# print(best_player.first_layer_bias)
-# print("best second layer weights:")
-# print(best_player.second_layer_weights)
-# print("best second layer bias:")
-# print(best_player.second_layer_bias)
-# print("best third layer weights:")
-# print(best_player.third_layer_weights)
-# print("best third layer bias:")
-# print(best_player.third_layer_bias)
+    if winner == "red":
+        best_player = obj.player1
+    else:
+        best_player = obj.player2
+
+end_time = time.time()
+print("Duration: ", end_time - start_time)
+
+# print(new_board.board)
+for i in new_board.board:
+    print(i)
+for i in new_board.board:
+    for piece in i:
+        if piece !=0:
+            print("PIECE COLOR: ", piece.color, " IS KING?: ", piece.king)
+print("WINNER COLOR:")
+print(winner)
+print("WINNER PLAYER NUM:")
+print(best_player.number)
+print("best first layer weights:")
+print(best_player.first_layer_weights)
+print("best first layer bias:")
+print(best_player.first_layer_bias)
+print("best second layer weights:")
+print(best_player.second_layer_weights)
+print("best second layer bias:")
+print(best_player.second_layer_bias)
+print("best third layer weights:")
+print(best_player.third_layer_weights)
+print("best third layer bias:")
+print(best_player.third_layer_bias)
