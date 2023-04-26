@@ -57,9 +57,9 @@ def minimax(position, depth, max_player, game):
         maxEval = float('-inf')  #
         best_move = None  
         if game.turn == "red":
-            color_m = "white"  # Determine the color of the opponent's pieces
+            color_m = "red"  # Determine the color of the opponent's pieces
         else:
-            color_m = "red"  # Determine the color of the own pieces
+            color_m = ""  # Determine the color of the own pieces
         for move in get_all_moves(position, color_m, game): 
             evaluation = minimax(move, depth-1, False, game)[0] 
             maxEval = max(maxEval, evaluation)  # Update the maximum evaluation score
@@ -128,23 +128,36 @@ obj = Game(player1, player2)
 start_time = time.time()
 counter = 0
 while counter < 40:
+    root = tk.Tk()
     old_pieces = obj.board.red_left + obj.board.white_left
+    # gui = CheckersBoard(root, obj.board.board)
+    # root.mainloop()
     # old_pieces = len(obj.board.get_all_pieces(obj.turn)) + len(obj.board.get_all_pieces(opponent))
-    if obj.turn == "white":
-        value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
+    if obj.turn == "red":
+        # value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj)
+        value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
         obj.ai_move(new_board)
         print(new_board.board)
+        gui = CheckersBoard(root, new_board.board)
     # value, new_board = minimax(obj.get_board(), 3, obj.turn, obj)
     # else:
-
+    else:
+        gui = CheckersBoard(root, obj.board.board)
+        gui.update_board(obj.board.board)
+        root.mainloop()
+        row , col = gui.row, gui.col
+        obj.select(row, col)
+        # gui = CheckersBoard(root, obj.board.board)
+        # print(row, col)
+        # gui = CheckersBoard(root, obj.board.board)
+        # obj.select(row, col)
     print(obj.turn)
     # print(new_board.board)
     # obj.ai_move(new_board)
-    root = tk.Tk()
-    gui = CheckersBoard(root, new_board.board)
+    # gui = CheckersBoard(root, new_board.board)
 
-    gui.update_board(new_board.board)
-    root.mainloop()
+    # gui.update_board(new_board.board)
+    # root.mainloop()
     new_pieces = obj.board.red_left + obj.board.white_left
     difference = old_pieces - new_pieces
     if difference > 0:
