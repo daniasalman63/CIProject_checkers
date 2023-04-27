@@ -138,12 +138,16 @@ def human_AI():
             gui = CheckersBoard(root, new_board.board)
             gui.update_board(obj.board.board)
             root.mainloop()
+            
         else:
-            row , col = gui.row, gui.col
-            obj.select(row, col)
+            
             gui = CheckersBoard(root, obj.board.board)
             gui.update_board(obj.board.board)
             root.mainloop()
+            row , col = gui.row, gui.col
+            obj.select(row, col)
+            
+            
         print(obj.turn)
         new_pieces = obj.board.red_left + obj.board.white_left
         difference = old_pieces - new_pieces
@@ -199,8 +203,8 @@ def AI_vs_AI():
 
     return new_board, winner, best_player
 
-# new_board, winner, best_player = human_AI()
-new_board, winner, best_player = AI_vs_AI()
+new_board, winner, best_player = human_AI()
+#new_board, winner, best_player = AI_vs_AI()
 
 for i in new_board.board:
     print(i)
