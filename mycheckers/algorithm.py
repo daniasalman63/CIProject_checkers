@@ -138,7 +138,7 @@ def human_AI():
             gui = CheckersBoard(root, new_board.board)
             gui.update_board(obj.board.board)
             root.mainloop()
-            
+
         else:
             
             gui = CheckersBoard(root, obj.board.board)
