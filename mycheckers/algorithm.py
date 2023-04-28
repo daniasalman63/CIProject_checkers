@@ -3,7 +3,7 @@ import pygame
 from game import Game
 from myfile import *
 import time
-from GUI import *
+from GUI3 import *
 
 ## OPTIMIZED VERSION OF MINIMAX FOR BETTER EFFICIENCY
 def alpha_beta(position, depth, alpha, beta, max_player, game, human_play):
@@ -127,24 +127,20 @@ def human_AI():
     obj = Game(player1, player2)
     start_time = time.time()
     counter = 0
+    
     while counter < 40:
-        root = tk.Tk()
+        
         old_pieces = obj.board.red_left + obj.board.white_left
         if obj.turn == "red":
             value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj, True)
             # value, new_board = minimax(obj.get_board(), 2, obj.turn, obj, True)
             obj.ai_move(new_board)
             print(new_board.board)
-            gui = CheckersBoard(root, new_board.board)
-            gui.update_board(obj.board.board)
-            root.mainloop()
+            gui = Checkerboard(obj.board.board)
 
         else:
-            
-            gui = CheckersBoard(root, obj.board.board)
-            gui.update_board(obj.board.board)
-            root.mainloop()
-            row , col = gui.row, gui.col
+            gui = Checkerboard(obj.board.board)
+            row, col = gui.run()
             obj.select(row, col)
             
             
@@ -183,6 +179,11 @@ def AI_vs_AI():
         print(obj.turn)
         # print(new_board.board)
         obj.ai_move(new_board)
+
+        gui = Checkerboard(new_board.board)
+        # gui.update_board(new_board.board)
+        # gui.run()
+
         new_pieces = obj.board.red_left + obj.board.white_left
         difference = old_pieces - new_pieces
         if difference > 0:
@@ -203,8 +204,8 @@ def AI_vs_AI():
 
     return new_board, winner, best_player
 
-new_board, winner, best_player = human_AI()
-#new_board, winner, best_player = AI_vs_AI()
+#new_board, winner, best_player = human_AI()
+new_board, winner, best_player = AI_vs_AI()
 
 for i in new_board.board:
     print(i)
