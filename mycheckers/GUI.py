@@ -1,73 +1,77 @@
-import tkinter as tk
-from board import *
-from game import Game
-
-
-class CheckersBoard:
-    def __init__(self, master, array):
-        self.master = master
-        self.canvas = tk.Canvas(master,width=400, height=400)
-        self.canvas.pack()
+ 
+import pygame
+ 
+class Checkerboard:
+    def __init__(self, array):
+        self.screen_size = (400, 400)
         self.square_size = 50
-        self.colors = {
-            "dark": "#2C3E50",
-            "light": "#EAEAEA"
-        }
-        self.selected_piece = None
-        self.canvas.bind("<Button-1>", self.on_square_clicked)
         self.array = array
+        self.board = [[0 for _ in range(8)] for _ in range(8)]
+        self.colors = {'red': (255, 0, 0), 'white': (255, 255, 255)}
+        pygame.init()
+
+        self.screen = pygame.display.set_mode(self.screen_size)
+        self.font = pygame.font.SysFont(None, 30)
+
+        self.update_board(array)
+        # self.run()
+    def update_board(self, board):
+
+        for y in range(8):
+            for x in range(8):
+                color = (234, 234, 234)
+                if (x + y) % 2 == 1:
+                    color = (44, 62, 80)
+                pygame.draw.rect(self.screen, color, pygame.Rect(x * self.square_size, y * self.square_size, self.square_size, self.square_size))
+
+                if board[y][x] != 0:
+                    if board[y][x].color == 'red':
+                        pygame.draw.circle(self.screen, 'red', (int((x + 0.5) * self.square_size), int((y + 0.5) * self.square_size)), int(self.square_size * 0.4))
+                        if board[y][x].king == True:
+                            pygame.draw.circle(self.screen,(255,255,0),(x*50+25,y*50+25),25,5)
+
+                    elif board[y][x].color == 'white':
+                        pygame.draw.circle(self.screen, 'white', (int((x + 0.5) * self.square_size), int((y + 0.5) * self.square_size)), int(self.square_size * 0.4))
+                        if board[y][x].king == True:
+                            pygame.draw.circle(self.screen,(255,255,0),(x*50+25,y*50+25),25,5)
+                
+
+        pygame.display.flip()
+
+    def get_clicked_piece(self):
+        self.x, self.y = pygame.mouse.get_pos()
+        self.row = self.y // self.square_size
+        self.col = self.x // self.square_size
         
+        return self.row, self.col
 
-        # draw the checkerboard
-        for row in range(8):
-            for col in range(8):
-                if (row+col) % 2 == 0:
-                    self.canvas.create_rectangle(col*50, row*50, (col+1)*50, (row+1)*50, fill=self.colors['light'])
-                else:
-                    self.canvas.create_rectangle(col*50, row*50, (col+1)*50, (row+1)*50, fill=self.colors['dark'])
-
-    def update_board(self, array):
-         
-        self.canvas.delete('piece')  # clear any previous pieces on the board
-        for row in range(8):
-            for col in range(8):
-                if array[row][col] != 0:
-
-                    if array[row][col].color == 'red':
-                        self.canvas.create_oval(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, fill='red', tags='piece')
-                        if array[row][col].king == True:
-                            self.canvas.create_oval(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, fill='red', tags='piece')
-                            self.canvas.create_arc(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, start=90, extent=180, style=tk.ARC, width=4, outline='yellow', tags='piece')
-                            self.canvas.create_arc(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, start=270, extent=180, style=tk.ARC, width=4, outline='yellow', tags='piece')
-                    elif array[row][col].color == 'white':
-                        self.canvas.create_oval(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, fill='white', tags='piece')
-                        if array[row][col].king == True:
-                            self.canvas.create_oval(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, fill='white', tags='piece')
-                            self.canvas.create_arc(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, start=90, extent=180, style=tk.ARC, width=4, outline='yellow', tags='piece')
-                            self.canvas.create_arc(col*50+10, row*50+10, (col+1)*50-10, (row+1)*50-10, start=270, extent=180, style=tk.ARC, width=4, outline='yellow', tags='piece')
-  
-
-    def on_square_clicked(self, event): #selects and tells location of piece
-        
-        self.row = event.y // self.square_size
-        self.col = event.x // self.square_size
-        piece = self.array[self.row][self.col]
-        print(f"you have selected the piece at ({self.row},{self.col})")
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    clicked_piece = self.get_clicked_piece()
+                    if clicked_piece is not None:
+                        print(f"you have selected the piece at ({self.row},{self.col})")
+                        return self.row, self.col
+                    
 
 
+        pygame.quit()
 
+# if __name__ == '__main__':
+    
+     
+#     array = [[0, 'white', 0, 'white', 0, 'white', 0, 'white'],
+#          ['white', 0, 'white', 0, 'white', 0, 'white', 0],
+#          [0, 'white', 0, 'white', 0, 'white', 0, 'white'],
+#          [0, 0, 0, 0, 0, 0, 0, 0],
+#          [0, 0, 0, 0, 0, 0, 0, 0],
+#          ['red', 0, 'red', 0, 'red', 0, 'red', 0],
+#          [0, 'red', 0, 'red', 0, 'red', 0, 'red'],
+#          ['red', 0, 'red', 0, 'red', 0, 'red', 0]]
 
-# root = tk.Tk()
-# array = [
-# ['white', 0, 'white', 0, 'white', 0, 'white', 0],
-# [0, 'white', 0, 'white', 0, 'white', 0, 'white'],
-# ['white', 0, 'white', 0, 'white', 0, 'white', 0],
-# [0, 0, 0, 0, 0, 0, 0, 0],
-# [0, 0, 0, 0, 0, 0, 0, 0],
-# [0, 'red', 0, 'red', 0, 'red', 0, 'red'],
-# ['red', 0, 'red', 0, 'red', 0, 'red', 0],
-# [0, 'red', 0, 'red', 0, 'red', 0, 'red']
-# ]
-# board = CheckersBoard(root, array)
-# board.update_board(array)
-# root.mainloop()
+#     board = Checkerboard(array)
+#     board.run()
