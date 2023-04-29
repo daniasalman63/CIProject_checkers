@@ -3,7 +3,7 @@ import pygame
 from game import Game
 from myfile import *
 import time
-from GUI3 import *
+from GUI_checkerboard import *
 
 ## OPTIMIZED VERSION OF MINIMAX FOR BETTER EFFICIENCY
 def alpha_beta(position, depth, alpha, beta, max_player, game, human_play):
@@ -123,7 +123,7 @@ def get_all_moves(board, color, game):
 #HUMAN VS AI
 def human_AI():
     player1 = evolutionary_player(1)
-    player2 = None
+    player2 = 'Shayan'
     obj = Game(player1, player2)
     start_time = time.time()
     counter = 0
@@ -135,13 +135,14 @@ def human_AI():
             value, new_board = alpha_beta(obj.get_board(), 3, float("-inf"), float("inf"), obj.turn, obj, True)
             # value, new_board = minimax(obj.get_board(), 2, obj.turn, obj, True)
             obj.ai_move(new_board)
-            print(new_board.board)
-            gui = Checkerboard(obj.board.board)
+            # print(new_board.board)
+            gui = Checkerboard(obj.board.board, obj.valid_moves)
 
         else:
-            gui = Checkerboard(obj.board.board)
+            gui = Checkerboard(obj.board.board, obj.valid_moves)
             row, col = gui.run()
             obj.select(row, col)
+            print(obj.valid_moves)
             
             
         print(obj.turn)
@@ -204,28 +205,54 @@ def AI_vs_AI():
 
     return new_board, winner, best_player
 
-#new_board, winner, best_player = human_AI()
-new_board, winner, best_player = AI_vs_AI()
+def run__human_game_from_gui():
+    new_board, winner, best_player = human_AI()
+    
+    for i in new_board.board:
+        print(i)
+    for i in new_board.board:
+        for piece in i:
+            if piece !=0:
+                print("PIECE COLOR: ", piece.color, " IS KING?: ", piece.king)
+    print("WINNER COLOR:")
+    print(winner)
+    print("WINNER PLAYER NUM:")
+    print(best_player.number)
+    print("best first layer weights:")
+    print(best_player.first_layer_weights)
+    print("best first layer bias:")
+    print(best_player.first_layer_bias)
+    print("best second layer weights:")
+    print(best_player.second_layer_weights)
+    print("best second layer bias:")
+    print(best_player.second_layer_bias)
+    print("best third layer weights:")
+    print(best_player.third_layer_weights)
+    print("best third layer bias:")
+    print(best_player.third_layer_bias)
 
-for i in new_board.board:
-    print(i)
-for i in new_board.board:
-    for piece in i:
-        if piece !=0:
-            print("PIECE COLOR: ", piece.color, " IS KING?: ", piece.king)
-print("WINNER COLOR:")
-print(winner)
-print("WINNER PLAYER NUM:")
-print(best_player.number)
-print("best first layer weights:")
-print(best_player.first_layer_weights)
-print("best first layer bias:")
-print(best_player.first_layer_bias)
-print("best second layer weights:")
-print(best_player.second_layer_weights)
-print("best second layer bias:")
-print(best_player.second_layer_bias)
-print("best third layer weights:")
-print(best_player.third_layer_weights)
-print("best third layer bias:")
-print(best_player.third_layer_bias)
+def run__ai_game_from_gui():
+    new_board, winner, best_player = AI_vs_AI()
+    
+    for i in new_board.board:
+        print(i)
+    for i in new_board.board:
+        for piece in i:
+            if piece !=0:
+                print("PIECE COLOR: ", piece.color, " IS KING?: ", piece.king)
+    print("WINNER COLOR:")
+    print(winner)
+    print("WINNER PLAYER NUM:")
+    print(best_player.number)
+    print("best first layer weights:")
+    print(best_player.first_layer_weights)
+    print("best first layer bias:")
+    print(best_player.first_layer_bias)
+    print("best second layer weights:")
+    print(best_player.second_layer_weights)
+    print("best second layer bias:")
+    print(best_player.second_layer_bias)
+    print("best third layer weights:")
+    print(best_player.third_layer_weights)
+    print("best third layer bias:")
+    print(best_player.third_layer_bias)
