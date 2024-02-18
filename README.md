@@ -59,5 +59,6 @@ Our program aimed to evolve neural networks to improve performance in checkers, 
 The following figure depicts a clever play made by the optimised neural network in the game of checkers. The weights being optimised through our evolutionary algorithm enable the network to decide on the optimal course of action more accurately. The neural network has determined that there is a white piece in front of it that can be caught in this precise move. It has determined the optimal course of action that will enable it to capture the white piece out of the total 8 moves it could have made. The capacity of the improved neural network to make such clever decisions is evidence of how the weights of the network were optimised by the evolutionary algorithm.
 ![placement of pieces after red has made a smart move to capture white.)](images/fig3.png)
 
-
+## Running the project
+make sure you have all python modules downloaded at the top of mychecker/main.ipynb. Then run all cells and wait for a GUI to appear to play against the AI player
 
