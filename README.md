@@ -46,3 +46,5 @@ During the training process, the evolutionary algorithm is used to optimize the 
 - **Crossover:** Uniform crossover is employed to create offspring, promoting diversity and exploration of the search space.
 - **Mutation:** Mutation involves randomly changing the values of a small subset of the weights and biases in the network.
 
+## Experimentation
+The experimentation focused on comparing crossover techniques in terms of effectiveness using three main evaluation metrics: highest total wins, highest win-to-match ratio, and highest score achieved per generation. Parameters were set consistently for fair comparison. It was observed that win-to-match ratio wasn't reliable due to fluctuations, while total wins proved better. Uniform crossover consistently yielded the highest wins and scores across generations. It was noted that higher wins led to higher scores. Comparative evaluation showed uniform crossover as the most effective method among those tested.
