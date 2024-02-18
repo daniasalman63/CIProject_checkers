@@ -32,3 +32,7 @@ The weights and biases for each layer are initially randomly generated and passe
 
 To optimize the search space for the evolutionary algorithm (EA), we adjusted the weights to lower dimensions until achieving desirable results.
 
+## Minimax Algorithm using Alpha-Beta pruning
+
+Each board state represents a node in the game tree, with edges representing possible moves. The minimax algorithm recursively evaluates states using our neural network's output. Alpha-beta pruning reduces the search space, returning the best move and its evaluation score.
+
