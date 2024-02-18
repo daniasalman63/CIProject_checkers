@@ -51,5 +51,5 @@ The experimentation focused on comparing crossover techniques in terms of effect
 
 This figure shows the highest score of every generation using uniform crossover:
 
-![Highest Score per Generation (Uniform Crossover)](images/fig2)
+![Highest Score per Generation (Uniform Crossover)](images/fig2.png)
 
