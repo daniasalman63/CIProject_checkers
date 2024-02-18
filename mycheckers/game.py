@@ -44,6 +44,7 @@ class Game:
             skipped = self.valid_moves[(row, col)]
             if skipped:
                 self.board.remove(skipped)
+            self.change_turn()
         else:
             return False
 
@@ -91,4 +92,3 @@ class Game:
 # # print(obj.move_limit)
 # while obj.winner() == None:
 #     value, new_board = minim
-

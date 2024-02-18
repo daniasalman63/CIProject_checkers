@@ -22,13 +22,12 @@ class Evol_Player(object):
         self.third_layer_weights = third_layer_weights
         self.third_layer_bias = third_layer_bias
 
-        self.wins = 0
+        self.win = 0
         self.loss = 0
         self.draw = 0
 
     def getWeights(self):
-        return self.first_layer_weights, self.first_layer_bias,  self.second_layer_weights, + \
-               self.second_layer_bias,  self.third_layer_weights,  self.third_layer_bias
+        return self.first_layer_weights, self.first_layer_bias,  self.second_layer_weights, self.second_layer_bias,  self.third_layer_weights,  self.third_layer_bias
 
 # Used in the NN
 def sigmoid(x):
@@ -36,6 +35,9 @@ def sigmoid(x):
     Calculate sigmoid
     """
     return 1 / (1 + np.exp(-x))
+
+def tanh(x):
+    return np.tanh(x)
 
 def evolutionary_player(count):
     
@@ -50,10 +52,10 @@ def evolutionary_player(count):
 
 # Use this Neural Network as the heuristic function for the minimax tree
 def predict_nn(board, player):
-    #board should be given as a 1x32 np array
-    first_hidden_output = sigmoid( np.dot( board, player.first_layer_weights) + player.first_layer_bias )
-    second_hidden_output = sigmoid( np.dot(first_hidden_output, player.second_layer_weights) + player.second_layer_bias )
-    third_layer_output = sigmoid( np.dot(second_hidden_output, player.third_layer_weights) + player.third_layer_bias )
+
+    first_hidden_output = tanh(np.dot(board, player.first_layer_weights) + player.first_layer_bias)
+    second_hidden_output = tanh(np.dot(first_hidden_output, player.second_layer_weights) + player.second_layer_bias)
+    third_layer_output = tanh(np.dot(second_hidden_output, player.third_layer_weights) + player.third_layer_bias)
 
     output = np.sum(third_layer_output)
     
