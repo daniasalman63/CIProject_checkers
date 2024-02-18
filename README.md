@@ -48,3 +48,8 @@ During the training process, the evolutionary algorithm is used to optimize the 
 
 ## Experimentation
 The experimentation focused on comparing crossover techniques in terms of effectiveness using three main evaluation metrics: highest total wins, highest win-to-match ratio, and highest score achieved per generation. Parameters were set consistently for fair comparison. It was observed that win-to-match ratio wasn't reliable due to fluctuations, while total wins proved better. Uniform crossover consistently yielded the highest wins and scores across generations. It was noted that higher wins led to higher scores. Comparative evaluation showed uniform crossover as the most effective method among those tested.
+
+This figure shows the highest score of every generation using uniform crossover:
+
+![Highest Score per Generation (Uniform Crossover)](images/fig2)
+
