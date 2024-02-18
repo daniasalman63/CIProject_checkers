@@ -49,9 +49,15 @@ During the training process, the evolutionary algorithm is used to optimize the 
 ## Experimentation
 The experimentation focused on comparing crossover techniques in terms of effectiveness using three main evaluation metrics: highest total wins, highest win-to-match ratio, and highest score achieved per generation. Parameters were set consistently for fair comparison. It was observed that win-to-match ratio wasn't reliable due to fluctuations, while total wins proved better. Uniform crossover consistently yielded the highest wins and scores across generations. It was noted that higher wins led to higher scores. Comparative evaluation showed uniform crossover as the most effective method among those tested.
 
+This figure shows the highest score of every generation using uniform crossover:
+![Highest Score per Generation (Uniform Crossover)](images/fig2.png)
+
 ## Challenges
 Our program aimed to evolve neural networks to improve performance in checkers, but in practical tests against Easy-level AI, our networks didn't win any games, indicating a need for refinement. We managed to draw four times after 400 generations using uniform crossover, suggesting potential for competitiveness with further evolution. However, running the evolutionary algorithm for more generations was limited by computational expense, with uniform crossover being the least time-consuming method at 1.07 minutes per generation. Despite challenges in adjusting hyperparameters, our experiments provided insights into evolutionary strategies for future investigation.
-This figure shows the highest score of every generation using uniform crossover:
 
-![Highest Score per Generation (Uniform Crossover)](images/fig2.png)
+## Performance Visualization
+The following figure depicts a clever play made by the optimised neural network in the game of checkers. The weights being optimised through our evolutionary algorithm enable the network to decide on the optimal course of action more accurately. The neural network has determined that there is a white piece in front of it that can be caught in this precise move. It has determined the optimal course of action that will enable it to capture the white piece out of the total 8 moves it could have made. The capacity of the improved neural network to make such clever decisions is evidence of how the weights of the network were optimised by the evolutionary algorithm.
+![placement of pieces after red has made a smart move to capture white.)](images/fig3.png)
+
+
 
