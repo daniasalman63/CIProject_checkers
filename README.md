@@ -2,7 +2,7 @@
 
 ## Overview
 
-Our first step in creating the AI checkers was to establish a standard checkers game, complete with the necessary rules and a graphical user interface (GUI). This process unfolded in several key phases:
+Our first step in creating the AI checkers was to establish a standard checkers game, complete with the necessary rules and a graphical user interface (GUI).
 
 ### 1. Piece Object
 
