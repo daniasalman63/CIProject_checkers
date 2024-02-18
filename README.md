@@ -36,3 +36,13 @@ To optimize the search space for the evolutionary algorithm (EA), we adjusted th
 
 Each board state represents a node in the game tree, with edges representing possible moves. The minimax algorithm recursively evaluates states using our neural network's output. Alpha-beta pruning reduces the search space, returning the best move and its evaluation score.
 
+## Evolutionary Algorithm for Training
+
+During the training process, the evolutionary algorithm is used to optimize the weights and biases of the neural network. The population of neural networks is evolved over several generations, with the individuals selected to produce offspring for the next generation. The fitness of each network is evaluated based on its performance in a series of games of checkers against other networks in the population. The Evolutionary Algorithm works as follows:
+
+- **Initialization:** The chromosome population is randomly initialized, containing weights and biases for three layers. Each chromosome represents a neural network. Thus, the population contains neural networks.
+- **Fitness:** The fitness of each neural network is evaluated based on the number of wins achieved. This serves as a measure of the network's performance in games of checkers.
+- **Selection Schemes:** Binary tournament is used for both parent and survivor selection to optimize computational efficiency.
+- **Crossover:** Uniform crossover is employed to create offspring, promoting diversity and exploration of the search space.
+- **Mutation:** Mutation involves randomly changing the values of a small subset of the weights and biases in the network.
+
