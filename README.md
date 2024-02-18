@@ -15,3 +15,10 @@ Next, we developed a `Board` object to manage the state of the checkers board. T
 ### 3. Game Object
 
 The final step involved creating a `Game` object responsible for coordinating the gameplay. This object keeps track of the turns, players, and valid moves throughout the course of the game. It maintains a record of each move made, facilitates the transition between players' turns, and ultimately determines the winner based on the state of the board array.
+
+## Initial Board Configuration
+
+The following figure shows the initial board configuration for white to make a move along with valid moves the selected piece can make:
+
+![Initial Board Configuration](images/fig1.png)
+
